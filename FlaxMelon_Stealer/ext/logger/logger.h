@@ -22,8 +22,8 @@ namespace logger {
 			prefix = "[#]";
 			break;
 		case e_logtype::info:
-			SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-			prefix = "[~]";
+			SetConsoleTextAttribute(hConsole, FOREGROUND_WHITE | FOREGROUND_WHITE | FOREGROUND_INTENSITY);
+			prefix = "[+]";
 			break;
 		case e_logtype::error:
 			SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);

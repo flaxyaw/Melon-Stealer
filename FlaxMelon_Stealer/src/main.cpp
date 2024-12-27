@@ -11,7 +11,7 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* use
 std::string read_file_utf8(const std::string& filepath) {
     std::ifstream file(filepath, std::ios::binary); // Open in binary mode
     if (!file) {
-        std::cerr << "Error opening file: " << filepath << std::endl;
+        logger::log(logger::error, "Error opening file.");
         return "";
     }
 

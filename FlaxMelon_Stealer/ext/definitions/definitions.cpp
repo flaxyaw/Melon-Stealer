@@ -35,7 +35,10 @@ namespace definitions {
         "chrome.exe",
         "brave.exe",
         "opera.exe", //idk if this is correct
-        "msedge.exe" 
+        "msedge.exe",//TODO: FIX EXE NAMES
+        "yandex.exe",
+        "operaGX.exe",
+        "chromebeta.exe"
         };
     }
 }
