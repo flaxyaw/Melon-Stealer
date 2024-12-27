@@ -1,6 +1,6 @@
 #ifndef _MACARON_BASE64_H_
 #define _MACARON_BASE64_H_
-
+#pragma once
 /**
  * The MIT License (MIT)
  * Copyright (c) 2016-2024 tomykaira

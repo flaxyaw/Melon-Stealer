@@ -11,7 +11,7 @@ namespace logger {
 	};
 
 
-	void log(e_logtype type, std::string msg, ...) {
+	inline void log(e_logtype type, std::string msg, ...) {
 
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		const char* prefix = "";

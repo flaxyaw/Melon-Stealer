@@ -135,6 +135,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ext\definitions\definitions.cpp" />
+    <ClCompile Include="ext\crypto\decrypt_utils.cpp" />
+    <ClCompile Include="ext\misc\db_operations.cpp" />
+    <ClCompile Include="ext\misc\json_operations.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,12 +148,17 @@
     <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3pp.ipp" />
     <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3ppext.ipp" />
     <ClInclude Include="ext\base64\base64.h" />
+    <ClInclude Include="ext\crypto\decrypt_utils.h" />
+    <ClInclude Include="ext\includes.h" />
     <ClInclude Include="ext\json\json.hpp" />
     <ClInclude Include="ext\logger\logger.h" />
+    <ClInclude Include="ext\misc\db_operations.h" />
     <ClInclude Include="ext\sqlite\sqlite3pp.h" />
     <ClInclude Include="ext\sqlite\sqlite3pp.ipp" />
     <ClInclude Include="ext\sqlite\sqlite3ppext.h" />
     <ClInclude Include="ext\sqlite\sqlite3ppext.ipp" />
+    <ClInclude Include="ext\definitions\definitions.h" />
+    <ClInclude Include="ext\misc\json_operations.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

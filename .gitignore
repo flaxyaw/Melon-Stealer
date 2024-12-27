@@ -399,3 +399,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 vcpkg/
+FlaxMelon_Stealer/dumpedDB.txt
