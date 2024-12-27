@@ -14,6 +14,7 @@
 #include "../ext/json/json.hpp"
 #include "../ext/logger/logger.h"
 #include "../ext/aes/aes.hpp"
+#include "../ext/sqlite/Database.h"
 
 //using nlohmanns json for easy reading and parsing
 using json = nlohmann::json;

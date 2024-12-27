@@ -141,6 +141,19 @@
     <ClInclude Include="ext\base64\base64.h" />
     <ClInclude Include="ext\json\json.hpp" />
     <ClInclude Include="ext\logger\logger.h" />
+    <ClInclude Include="ext\sqlite\Assertion.h" />
+    <ClInclude Include="ext\sqlite\Backup.h" />
+    <ClInclude Include="ext\sqlite\Column.h" />
+    <ClInclude Include="ext\sqlite\Database.h" />
+    <ClInclude Include="ext\sqlite\Exception.h" />
+    <ClInclude Include="ext\sqlite\ExecuteMany.h" />
+    <ClInclude Include="ext\sqlite\Savepoint.h" />
+    <ClInclude Include="ext\sqlite\SQLiteCpp.h" />
+    <ClInclude Include="ext\sqlite\SQLiteCppExport.h" />
+    <ClInclude Include="ext\sqlite\Statement.h" />
+    <ClInclude Include="ext\sqlite\Transaction.h" />
+    <ClInclude Include="ext\sqlite\Utils.h" />
+    <ClInclude Include="ext\sqlite\VariadicBind.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
