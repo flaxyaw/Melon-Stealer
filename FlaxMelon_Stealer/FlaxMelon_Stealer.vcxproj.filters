@@ -32,46 +32,22 @@
     <ClInclude Include="ext\logger\logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\aes\aes.hpp">
+    <ClInclude Include="ext\sqlite\sqlite3pp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sqlite\Assertion.h">
+    <ClInclude Include="ext\sqlite\sqlite3ppext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sqlite\Backup.h">
+    <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3pp.ipp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sqlite\Column.h">
+    <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3ppext.ipp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sqlite\Database.h">
+    <ClInclude Include="ext\sqlite\sqlite3pp.ipp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sqlite\Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\ExecuteMany.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\Savepoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\SQLiteCpp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\SQLiteCppExport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\Statement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\Transaction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\sqlite\VariadicBind.h">
+    <ClInclude Include="ext\sqlite\sqlite3ppext.ipp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

