@@ -11,7 +11,7 @@ Even though the code is horrible, I'm open to issues or pull requests if you'd l
 ### *High Priority*:
 
 - [X] **Implement Multi-Browser support** (Brave, Chrome, Opera, Edge etc.)
-- [ ] **Add proper error handling and fixes for failure situations + edge cases (not installed browser, browser not running, browser installed on other drive etc.)
+- [ ] **Fixes** (proper error handling and fixes for failure situations + edge cases like missing browser, browser not running, browser installed on other drive etc.)
 - [ ] **Implement Multi-Browser Engine support** (Gecko etc.)
 - [ ] **Add Misc features** (Cookie collection, History Collection etc.)
 
