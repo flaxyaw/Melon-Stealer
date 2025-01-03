@@ -18,9 +18,9 @@ namespace definitions {
         {"Chrome_Beta", std::getenv("USERPROFILE") + std::string("\\AppData\\Local\\Google\\Chrome Beta\\User Data\\")},
         {"Edge", std::getenv("USERPROFILE") + std::string("\\AppData\\Local\\Microsoft\\Edge\\User Data\\")},
         {"Brave", std::getenv("USERPROFILE") + std::string("\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data\\")},
-        {"Opera", std::getenv("USERPROFILE") + std::string("\\AppData\\Roaming\Opera Software\Opera Stable\\")}, //Why tf does opera install to \\Roaming?? wtf opera.
-        {"Opera GX", std::getenv("USERPROFILE") + std::string("\\AppData\\Roaming\Opera Software\Opera GX Stable\\")},
-        {"Yandex", std::getenv("USERPROFILE") + std::string("\\AppData\\Local\Yandex\\YandexBrowser\\")},
+        {"Opera", std::getenv("USERPROFILE") + std::string("\\AppData\\Roaming\\Opera Software\\Opera Stable\\")}, //Why tf does opera install to \\Roaming?? wtf opera.
+        {"Opera GX", std::getenv("USERPROFILE") + std::string("\\AppData\\Roaming\\Opera Software\\Opera GX Stable\\")},
+        {"Yandex", std::getenv("USERPROFILE") + std::string("\\AppData\\Local\\Yandex\\YandexBrowser\\")},
     };
 
     void initialize() {
