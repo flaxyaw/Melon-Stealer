@@ -1,6 +1,6 @@
 # MelonStealer
 
-# new version -> https://github.com/Nerds-Incorperated/CubaWare
+# new version -> https://github.com/Nerds-Incorp/CubaWare
 
 **MelonStealer** is a project made for educational purposes, created in a single day just for fun. The code is pretty bad, and I'm fully aware of it. This project **WILL NOT BE MAINTAINED** and is **NOT meant to actually be used**.
 
